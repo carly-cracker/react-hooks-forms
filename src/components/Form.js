@@ -1,60 +1,50 @@
 import React, { useState } from "react";
 
 function Form() {
-  const [firstName, setFirstName] = useState("Carlos");
-  const [lastName, setLastName] = useState("Korir");
-  const [newsLetter, setNewsLetter] = useState(false)
-  const [password, setPassword] = useState("")
-  const [number, setNumber] = useState("")
-  const [isInvalidNumber, setisInvalidNumber] = useState(null)
-
-  function handleFirstNameChange(event){
-    setFirstName(event.target.value)
-  }
-
-  function handleLastNameChange(event){
-    setLastName(event.target.value)
-  }  
-  function handleNewsLetter (event){
-    setNewsLetter(event.target.checked)
-  }
-  function handlePassword(event){
-    setPassword(event.target.value)
-  }
-  function handleNumber(event){
-    const newNumber = parseInt(event.target.value)
-    if (newNumber >=0 && newNumber<= 5){
-      setNumber(newNumber)
-      isInvalidNumber(null)
-    }
-    else{
-      setisInvalidNumber(`${newNumber} is invalid`)
-    }
-
-  }
+  const [formData, setFormData] = useState({
+    firstName:"carlos",
+    lastName:"",
+    newsLetter:false,
+    password:"",
+    number:"",
+    isInvalidNumber:null
+  })
 
   function handleSubmitForm (event){
     event.preventDefault()
-    const formData = {
-      firstName,
-      lastName,
-      password,
-      number
-    }
     console.log("form submitted", formData)
+  }
+  function handleChange(event){
+    const key = event.target.id
+    const value = event.target.type === "checkbox"? event.target.checked : event.target.value
+    setFormData({
+      ...formData, 
+      [key]:value
+    }) 
   }
 
   return (
     <form onSubmit={handleSubmitForm}>
-      <input type="text" onChange={handleFirstNameChange} value={firstName} />
-      <input type="text" onChange={handleLastNameChange} value={lastName} />
+      <input 
+      type="text" 
+      id="firstName"
+      onChange={handleChange} 
+      value={formData.firstName} 
+      />
+
+      <input 
+      type="text" 
+      onChange={handleChange} 
+      id="lastName"
+      value={formData.lastName} 
+      />
       <br />
       <label htmlFor="newsletter">Subscribe to our news letter</label>
       <input
       type="checkbox"
-      id="newsletter"
-      onChange={handleNewsLetter}
-      checked = {newsLetter}
+      id="newsLetter"
+      onChange={handleChange}
+      checked = {formData.newsLetter}
       />
       <br/>
       <label htmlFor="password">Password</label>
@@ -62,23 +52,27 @@ function Form() {
         type="password"
         id="password"
         placeholder="********"
-        onChange={handlePassword}
-        value={password}
+        onChange={handleChange} 
+        value={formData.password}
       />
       <br/>
       <h4>Rate my react please</h4>
       <br/>
       <label htmlFor="ratings">Ratings</label>
       <input 
-        type="number"
-        id="ratings"
+        type="text"
+        id="number"
         placeholder="rate"
-        onChange={handleNumber}
-        value={number}
+        onChange={handleChange} 
+        value={formData.number}
       />
-      {isInvalidNumber? <span style={{ color: "red" }}>{isInvalidNumber}</span> : "good"}
+      {formData.isInvalidNumber ? (
+  <span style={{ color: "red" }}>{formData.isInvalidNumber}</span>
+) : (
+  <span style={{ color: "green" }}>✓ good</span>
+)}
       <br/>
-      <button type="submit">Submit</button>
+      <button type="submit" style={{borderRadius : "10px"}}>Submit</button>
       
     </form>
   );
